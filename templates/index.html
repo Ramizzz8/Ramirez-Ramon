@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Para Papá — Álbum de recuerdos</title>
+    <meta name="description" content="Página personal para Papá." />
+    <link e/svg+xml,%3Csvg xmlns=>
+    <style>
+      :root {
+        --bg: #f9f7f2;
+        --paper: #fffdf7;
+        --text: #1f2937;
+        --muted: #6b7280;
+        --primary: #7c3aed;
+        --accent: #22c55e;
+        --gold: #f59e0b;
+        --frame: #ffffff;
+        --shadow: 0 18px 35px rgba(0, 0, 0, 0.1);
+        --radius: 18px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, 'Helvetica Neue', Arial,
+          sans-serif;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 22px;
+      }
+
+      /* HEADER GRANDE con fondo sutil y cuenta regresiva */
+      header.hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 26px;
+        box-shadow: var(--shadow);
+        background: radial-gradient(
+            1200px 400px at -10% 10%,
+            rgba(124, 58, 237, 0.12),
+            transparent 40%
+          ),
+          radial-gradient(900px 600px at 110% -10%, rgba(34, 197, 94, 0.12), transparent 35%),
+          linear-gradient(135deg, #fff1cc, #eef2ff);
+      }
+      .hero-inner {
+        padding: 36px;
+      }
+      .title {
+        font-size: clamp(34px, 5.8vw, 64px);
+        margin: 0 0 12px;
+        font-weight: 900;
+        letter-spacing: 0.4px;
+        color: black;
+      }
+      .subtitle {
+        font-size: clamp(16px, 2.4vw, 22px);
+        color: var(--muted);
+        margin: 0 0 16px;
+      }
+
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 12px 0;
+      }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        background: #fff;
+        border-radius: 999px;
+        border: 1px solid #eee;
+        box-shadow: var(--shadow);
+        font-size: 14px;
+      }
+
+      .countdown {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(4, minmax(180px, 1fr));
+        gap: 16px;
+        color: #000;
+      }
+      @media (max-width: 880px) {
+        .countdown {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+      .box {
+        background: #fff;
+        border: 1px solid #eee;
+        border-radius: 22px;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .ring::before {
+        content: '';
+        position: absolute;
+        inset: -20px;
+        border-radius: 50%;
+        background: conic-gradient(from 0deg, #7c3aed22, #22c55e22, #f59e0b22, #7c3aed22);
+        filter: blur(22px);
+        opacity: 0.6;
+      }
+      .num {
+        font-size: clamp(38px, 6.5vw, 58px);
+        font-weight: 900;
+      }
+      .lbl {
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      section {
+        margin: 26px 0;
+      }
+      .card {
+        background: var(--paper);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 22px;
+      }
+      h2 {
+        margin: 8px 0 12px;
+        font-size: clamp(22px, 3.3vw, 30px);
+      }
+      p.muted {
+        color: var(--muted);
+      }
+
+      /* BOTONES */
+      .btn {
+        appearance: none;
+        border: none;
+        background: var(--primary);
+        color: #fff;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: var(--shadow);
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+      .btn-outline {
+        background: #fff;
+        color: var(--primary);
+        border: 1px solid rgba(124, 58, 237, 0.25);
+      }
+      .btn-green {
+        background: var(--accent);
+      }
+      .btn-gold {
+        background: var(--gold);
+        color: #1f2937;
+      }
+      .toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+
+      /* MÚSICA con visualizador */
+      .music {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .music {
+          grid-template-columns: 1fr;
+        }
+      }
+      .viz-wrap {
+        background: #0b1020;
+        border-radius: 16px;
+        padding: 10px;
+      }
+      canvas#viz {
+        width: 100%;
+        height: 160px;
+        display: block;
+        border-radius: 10px;
+        background: linear-gradient(180deg, #0b1020, #111827);
+      }
+
+      /* GALERÍA MASONRY con “marco polaroid” y más fotos */
+      .gallery-toolbar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: center;
+        margin: 12px 0;
+      }
+      .gallery-toolbar input[type='text'] {
+        flex: 1;
+        padding: 10px 12px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 15px;
+      }
+      .masonry {
+        columns: 4 260px;
+        column-gap: 16px;
+      }
+      @media (max-width: 1200px) {
+        .masonry {
+          columns: 3 240px;
+        }
+      }
+      @media (max-width: 900px) {
+        .masonry {
+          columns: 2 220px;
+        }
+      }
+      @media (max-width: 640px) {
+        .masonry {
+          columns: 1 100%;
+        }
+      }
+
+      .photo-card {
+        break-inside: avoid;
+        margin: 0 0 16px;
+        background: var(--frame);
+        border: 10px solid #fff;
+        border-bottom: 36px solid #fff;
+        border-radius: 14px; /* marco polaroid */
+        box-shadow: 0 12px 22px rgba(0, 0, 0, 0.15);
+        position: relative;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transform: rotate(calc(var(--tilt, 0deg)));
+      }
+      .photo-card:hover {
+        transform: translateY(-2px) rotate(calc(var(--tilt, 0deg)));
+        box-shadow: 0 16px 28px rgba(0, 0, 0, 0.18);
+      }
+      .photo-card img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 8px;
+      }
+      .caption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 6px;
+        text-align: center;
+        color: #374151;
+        font-weight: 700;
+        font-size: 14px;
+      }
+      .card-actions {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: flex;
+        gap: 6px;
+      }
+      .icon-btn {
+        border: none;
+        background: #ffffffcc;
+        backdrop-filter: blur(6px);
+        border-radius: 999px;
+        padding: 8px;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+      }
+      .icon-btn:hover {
+        transform: translateY(-1px);
+      }
+      .heart {
+        color: #ef4444;
+      }
+      .zoom {
+        color: #1f2937;
+      }
+      .drag {
+        color: #7c3aed;
+      }
+
+      /* LIGHTBOX */
+      .lightbox {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+      }
+      .lightbox.active {
+        display: flex;
+      }
+      .lightbox-content {
+        max-width: 90vw;
+        max-height: 85vh;
+        background: #000;
+        border-radius: 12px;
+        overflow: hidden;
+        position: relative;
+      }
+      .lightbox img {
+        display: block;
+        max-width: 90vw;
+        max-height: 85vh;
+      }
+      .lightbox-toolbar {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(17, 24, 39, 0.6);
+        color: #fff;
+        padding: 10px 12px;
+      }
+      .lb-btn {
+        border: none;
+        border-radius: 999px;
+        background: #ffffff22;
+        color: #fff;
+        padding: 8px 12px;
+        cursor: pointer;
+      }
+      .lb-btn:hover {
+        background: #ffffff40;
+      }
+      .lb-caption {
+        font-weight: 600;
+      }
+
+      /* REVEAL ANIMATIONS */
+      .reveal {
+        opacity: 0;
+        transform: translateY(14px);
+        transition: 0.5s;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: none;
+      }
+
+      /* MODO OSCURO */
+      .toggle {
+        position: fixed;
+        right: 16px;
+        bottom: 16px;
+        background: #111;
+        color: #fff;
+        border-radius: 999px;
+        padding: 10px 14px;
+        z-index: 120;
+      }
+      .dark {
+        --bg: #0b1020;
+        --paper: #0e1726;
+        --text: #e5e7eb;
+        --muted: #9aa2b1;
+        --primary: #8b5cf6;
+        --accent: #22c55e;
+        --gold: #fbbf24;
+        --frame: #0f172a;
+        --shadow: 0 12px 25px rgba(0, 0, 0, 0.35);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- HEADER -->
+      <header class="hero reveal">
+        <div class="hero-inner">
+          <h1 class="title">PARA MI VIEJO 💙</h1>
+          <p class="subtitle" id="introText">Un pequeño detalle con amor.</p>
+          <div class="chips">
+            <span class="chip">🎂 Cumpleaños: <strong id="dateChip">—</strong></span>
+            <span class="chip">🕰️ Hora en Colombia: <strong id="nowCol"></strong></span>
+            <span class="chip">📍 Colombia (zona horaria oficial)</span>
+          </div>
+
+          <div class="countdown">
+            <div class="box ring">
+              <div class="num" id="days">0</div>
+              <div class="lbl">días</div>
+            </div>
+            <div class="box ring">
+              <div class="num" id="hours">0</div>
+              <div class="lbl">horas</div>
+            </div>
+            <div class="box ring">
+              <div class="num" id="minutes">0</div>
+              <div class="lbl">minutos</div>
+            </div>
+            <div class="box ring">
+              <div class="num" id="seconds">0</div>
+              <div class="lbl">segundos</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MÚSICA -->
+      <section class="card reveal">
+        <h2>Me acuerdo de ti cuando escucho... 🎵</h2>
+        <div class="music">
+          <div>
+            <p class="muted">
+              Mi verdad - Maná | (Reproduce o pausa cuando quieras. Se muestra un visualizador
+              simple que reacciona a la música.)
+            </p>
+            <audio id="player" controls style="width: 100%"></audio>
+            <div class="toolbar">
+              <button id="playBtn" class="btn">▶️ Play</button>
+              <button id="pauseBtn" class="btn btn-outline">⏸️ Pausa</button>
+              <button id="muteBtn" class="btn btn-outline">🔇 Silencio</button>
+            </div>
+            <p id="songInfo" class="muted" style="margin-top: 6px">Cargando…</p>
+          </div>
+          <div class="viz-wrap">
+            <canvas id="viz"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- GALERÍA -->
+      <section class="card reveal">
+        <h2>Galería de recuerdos 📸</h2>
+        <p class="muted">
+          Sube varias fotos, ordénalas, marca tus favoritas con ❤️, haz zoom y disfruta el
+          slideshow.
+        </p>
+
+        <div class="gallery-toolbar">
+          <input type="text" id="searchInput" placeholder="Buscar por texto de la caption…" />
+          <input type="file" id="fileInput" accept="image/*" multiple style="display: none" />
+          <button id="addPhotosBtn" class="btn-green">➕ Añadir fotos</button>
+          <button id="shuffleBtn" class="btn-outline">🔀 Mezclar</button>
+          <button id="favoritesFirstBtn" class="btn-outline">❤️ Favoritas primero</button>
+          <button id="slideshowBtn" class="btn-gold">🎞️ Iniciar slideshow</button>
+        </div>
+
+        <div class="masonry" id="gallery"></div>
+        <p class="muted" style="margin-top: 6px">
+          Consejo: también puedes arrastrar archivos de imagen desde tu ordenador directamente sobre
+          la página.
+        </p>
+      </section>
+
+      <!-- NOTAS -->
+      <section class="card reveal">
+        <h2>Palabras para Papá ✍️</h2>
+        <p class="muted">Escribe una dedicatoria. Se guarda localmente en este dispositivo.</p>
+        <textarea
+          id="noteArea"
+          placeholder="Escribe tu mensaje..."
+          style="
+            width: 100%;
+            min-height: 120px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            padding: 12px;
+          "
+        ></textarea>
+        <div class="toolbar">
+          <button id="saveNote" class="btn">Guardar</button>
+          <button id="clearNote" class="btn btn-outline">Limpiar</button>
+        </div>
+      </section>
+
+      <div class="card reveal" style="text-align: center">
+        Con ❤️ para ti Papá — Siempre presente en mi mente y corazón.
+      </div>
+    </div>
+
+    <!-- LIGHTBOX -->
+    <div class="lightbox" id="lightbox">
+      <div class="lightbox-content">
+        <img id="lightboxImg" alt="Foto ampliada" />
+        <div class="lightbox-toolbar">
+          <button id="prevBtn" class="lb-btn">⟨ Anterior</button>
+          <div class="lb-caption" id="lightboxCaption">—</div>
+          <button id="nextBtn" class="lb-btn">Siguiente ⟩</button>
+          <button id="closeBtn" class="lb-btn">✕ Cerrar</button>
+        </div>
+      </div>
+    </div>
+
+    <button class="toggle" id="toggleTheme">🌙 Modo oscuro</button>
+
+    <script>
+      /* ========= CONFIG =========
+       - Zona horaria: Colombia (America/Bogota)
+       - Cumpleaños: 28 de diciembre (próximo)
+       - Canción por defecto: "cancion.mp3"
+    =================================== */
+      const CONFIG = {
+        dadName: 'Papá',
+        introText: 'Un álbum vivo de recuerdos, música y cariño.',
+        timeZone: 'America/Bogota',
+        locale: 'es-CO',
+        eventDateISO: '2025-12-28T00:00:00-05:00',
+        defaultSong: 'cancion.mp3',
+        maxSavedPhotos: 80, // límite razonable en localStorage
+      };
+      document.getElementById('introText').textContent = CONFIG.introText;
+
+      /* -------- Fecha y hora Colombia -------- */
+      const eventDate = new Date(CONFIG.eventDateISO);
+      function fmtCol(d) {
+        return new Intl.DateTimeFormat(CONFIG.locale, {
+          timeZone: CONFIG.timeZone,
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        }).format(d);
+      }
+      document.getElementById('dateChip').textContent = fmtCol(eventDate);
+
+      const nowColEl = document.getElementById('nowCol');
+      function updateNowCol() {
+        const now = new Date();
+        nowColEl.textContent = new Intl.DateTimeFormat(CONFIG.locale, {
+          timeZone: CONFIG.timeZone,
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit',
+        }).format(now);
+      }
+      updateNowCol();
+      setInterval(updateNowCol, 1000);
+
+      /* -------- Countdown -------- */
+      const daysEl = document.getElementById('days');
+      const hoursEl = document.getElementById('hours');
+      const minutesEl = document.getElementById('minutes');
+      const secondsEl = document.getElementById('seconds');
+
+      function nextBirthdayBase(date) {
+        const now = new Date();
+        return now.getTime() <= date.getTime()
+          ? date
+          : new Date(
+              `${date.getUTCFullYear() + 1}-${CONFIG.eventDateISO.slice(5, 10)}T${
+                CONFIG.eventDateISO.split('T')[1]
+              }`
+            );
+      }
+      let target = nextBirthdayBase(eventDate);
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = target.getTime() - now.getTime();
+        const s = Math.max(0, Math.floor(diff / 1000));
+        const d = Math.floor(s / 86400);
+        const h = Math.floor((s % 86400) / 3600);
+        const m = Math.floor((s % 3600) / 60);
+        const sec = s % 60;
+        daysEl.textContent = d;
+        hoursEl.textContent = h;
+        minutesEl.textContent = m;
+        secondsEl.textContent = sec;
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      /* -------- Modo oscuro -------- */
+      const THEME_KEY = 'dadpage-theme';
+      const toggleTheme = document.getElementById('toggleTheme');
+      function applyTheme(theme) {
+        if (theme === 'dark') {
+          document.body.classList.add('dark');
+          toggleTheme.textContent = '☀️ Modo claro';
+        } else {
+          document.body.classList.remove('dark');
+          toggleTheme.textContent = '🌙 Modo oscuro';
+        }
+        localStorage.setItem(THEME_KEY, theme);
+      }
+      applyTheme(
+        localStorage.getItem(THEME_KEY) ||
+          (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+      );
+      toggleTheme.addEventListener('click', () => {
+        const cur = document.body.classList.contains('dark') ? 'dark' : 'light';
+        applyTheme(cur === 'dark' ? 'light' : 'dark');
+      });
+
+      /* -------- Reveal animations -------- */
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      /* -------- Música + visualizador -------- */
+      const player = document.getElementById('player');
+      const playBtn = document.getElementById('playBtn');
+      const pauseBtn = document.getElementById('pauseBtn');
+      const muteBtn = document.getElementById('muteBtn');
+      const songInfo = document.getElementById('songInfo');
+      const vizCanvas = document.getElementById('viz');
+      const vctx = vizCanvas.getContext('2d');
+
+      function fitCanvas() {
+        vizCanvas.width = vizCanvas.clientWidth;
+        vizCanvas.height = vizCanvas.clientHeight;
+      }
+      window.addEventListener('resize', fitCanvas);
+      fitCanvas();
+
+      let audioCtx, analyser, srcNode, dataArray;
+      function initAudio() {
+        if (audioCtx) return;
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        srcNode = audioCtx.createMediaElementSource(player);
+        srcNode.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        renderViz();
+      }
+      function renderViz() {
+        requestAnimationFrame(renderViz);
+        if (!analyser) return;
+        analyser.getByteFrequencyData(dataArray);
+        vctx.clearRect(0, 0, vizCanvas.width, vizCanvas.height);
+        const barW = vizCanvas.width / dataArray.length;
+        for (let i = 0; i < dataArray.length; i++) {
+          const val = dataArray[i];
+          const h = (val / 255) * vizCanvas.height;
+          const x = i * barW;
+          const grad = vctx.createLinearGradient(0, 0, 0, vizCanvas.height);
+          grad.addColorStop(0, '#8b5cf6');
+          grad.addColorStop(1, '#22c55e');
+          vctx.fillStyle = grad;
+          vctx.fillRect(x, vizCanvas.height - h, barW * 0.9, h);
+        }
+      }
+      function setSong(src) {
+        player.src = src;
+        player.load();
+        songInfo.textContent = `Archivo: ${src}`;
+      }
+      if (CONFIG.defaultSong) setSong(CONFIG.defaultSong);
+
+      playBtn.addEventListener('click', async () => {
+        try {
+          await player.play();
+          initAudio();
+          if (audioCtx && audioCtx.state === 'suspended') {
+            await audioCtx.resume();
+          }
+        } catch (e) {}
+      });
+      pauseBtn.addEventListener('click', () => player.pause());
+      muteBtn.addEventListener('click', () => (player.muted = !player.muted));
+      player.addEventListener('timeupdate', () => {
+        const cur = player.currentTime,
+          dur = player.duration || 0;
+        const pct = dur ? Math.round((cur / dur) * 100) : 0;
+        songInfo.textContent = `Archivo: ${player.src.split('/').pop()} • ${Math.floor(
+          cur / 60
+        )}:${String(Math.floor(cur % 60)).padStart(2, '0')} / ${
+          dur ? Math.floor(dur / 60) + ':' + String(Math.floor(dur % 60)).padStart(2, '0') : '—'
+        } • ${pct}%`;
+      });
+
+      /* -------- Galería avanzada -------- */
+      const galleryEl = document.getElementById('gallery');
+      const fileInput = document.getElementById('fileInput');
+      const addPhotosBtn = document.getElementById('addPhotosBtn');
+      const shuffleBtn = document.getElementById('shuffleBtn');
+      const favoritesFirstBtn = document.getElementById('favoritesFirstBtn');
+      const slideshowBtn = document.getElementById('slideshowBtn');
+      const searchInput = document.getElementById('searchInput');
+
+      const PHOTOS_KEY = 'dadpage-photos';
+      let photos = loadPhotos() || seedPhotos();
+      let slideshowTimer = null;
+      let currentIndex = 0;
+
+      function seedPhotos() {
+        return [
+          {
+            src: 'https://images.unsplash.com/photo-1513152697235-fe74c7e2c4df?q=80&w=1200&auto=format&fit=crop',
+            cap: 'Recuerdo 1',
+            fav: false,
+            tilt: '-1deg',
+          },
+          {
+            src: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop',
+            cap: 'Recuerdo 2',
+            fav: true,
+            tilt: '1.2deg',
+          },
+          {
+            src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop',
+            cap: 'Recuerdo 3',
+            fav: false,
+            tilt: '-.6deg',
+          },
+          {
+            src: 'https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=1200&auto=format&fit=crop',
+            cap: 'Recuerdo 4',
+            fav: false,
+            tilt: '1deg',
+          },
+        ];
+      }
+      function loadPhotos() {
+        try {
+          return JSON.parse(localStorage.getItem(PHOTOS_KEY));
+        } catch {
+          return null;
+        }
+      }
+      function savePhotos() {
+        try {
+          const toSave = photos.slice(0, CONFIG.maxSavedPhotos);
+          localStorage.setItem(PHOTOS_KEY, JSON.stringify(toSave));
+        } catch (e) {}
+      }
+
+      function renderGallery(filter = '') {
+        galleryEl.innerHTML = '';
+        const list = photos
+          .map((p, i) => ({ ...p, idx: i }))
+          .filter((p) => p.cap.toLowerCase().includes(filter.toLowerCase()));
+
+        if (list.length === 0) {
+          galleryEl.innerHTML =
+            "<div class='muted' style='padding:10px'>No hay fotos coincidentes. Prueba otra búsqueda o añade nuevas.</div>";
+          return;
+        }
+
+        list.forEach((p) => {
+          const card = document.createElement('div');
+          card.className = 'photo-card';
+          card.style.setProperty('--tilt', p.tilt || '0deg');
+          card.setAttribute('draggable', 'true');
+          card.dataset.index = p.idx;
+
+          card.innerHTML = `
+          <div class="card-actions">
+            <button class="icon-btn heart" title="Favorito">${p.fav ? '❤️' : '🤍'}</button>
+            <button class="icon-btn zoom" title="Ver grande">🔍</button>
+            <button class="icon-btn drag" title="Arrastrar para reordenar">↕️</button>
+          </div>
+          ${p.src}
+          <div class="caption">${escapeHtml(p.cap)}</div>
+        `;
+          // Favorito
+          card.querySelector('.heart').addEventListener('click', () => {
+            photos[p.idx].fav = !photos[p.idx].fav;
+            savePhotos();
+            renderGallery(searchInput.value);
+          });
+          // Zoom (lightbox)
+          card.querySelector('.zoom').addEventListener('click', () => openLightbox(p.idx));
+          card.querySelector('img').addEventListener('click', () => openLightbox(p.idx));
+
+          // Drag & drop reorder
+          card.addEventListener('dragstart', (e) => {
+            e.dataTransfer.setData('text/plain', p.idx);
+          });
+          card.addEventListener('dragover', (e) => e.preventDefault());
+          card.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const from = parseInt(e.dataTransfer.getData('text/plain'), 10);
+            const to = p.idx;
+            if (from === to) return;
+            const item = photos.splice(from, 1)[0];
+            photos.splice(to, 0, item);
+            savePhotos();
+            renderGallery(searchInput.value);
+          });
+
+          galleryEl.appendChild(card);
+        });
+      }
+      function escapeHtml(s) {
+        return s.replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
+        );
+      }
+
+      addPhotosBtn.addEventListener('click', () => fileInput.click());
+      fileInput.addEventListener('change', async () => {
+        const files = Array.from(fileInput.files || []);
+        for (const f of files) {
+          await readFileAsDataURL(f).then((url) => {
+            photos.push({
+              src: url,
+              cap: f.name.replace(/\.[^/.]+$/, ''),
+              fav: false,
+              tilt: Math.random() > 0.5 ? '1deg' : '-1deg',
+            });
+          });
+        }
+        savePhotos();
+        renderGallery(searchInput.value);
+        fileInput.value = '';
+      });
+      // Arrastrar al documento completo
+      document.addEventListener('dragover', (e) => {
+        e.preventDefault();
+      });
+      document.addEventListener('drop', async (e) => {
+        e.preventDefault();
+        const files = Array.from(e.dataTransfer?.files || []).filter((f) =>
+          f.type.startsWith('image/')
+        );
+        for (const f of files) {
+          await readFileAsDataURL(f).then((url) => {
+            photos.push({
+              src: url,
+              cap: f.name.replace(/\.[^/.]+$/, ''),
+              fav: false,
+              tilt: Math.random() > 0.5 ? '1deg' : '-1deg',
+            });
+          });
+        }
+        savePhotos();
+        renderGallery(searchInput.value);
+      });
+
+      function readFileAsDataURL(file) {
+        return new Promise((res, rej) => {
+          const reader = new FileReader();
+          reader.onload = () => res(reader.result);
+          reader.onerror = rej;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      shuffleBtn.addEventListener('click', () => {
+        photos.sort(() => Math.random() - 0.5);
+        savePhotos();
+        renderGallery(searchInput.value);
+      });
+
+      favoritesFirstBtn.addEventListener('click', () => {
+        photos.sort((a, b) => (b.fav ? 1 : 0) - (a.fav ? 1 : 0));
+        renderGallery(searchInput.value);
+      });
+
+      searchInput.addEventListener('input', () => renderGallery(searchInput.value));
+      renderGallery();
+
+      /* -------- Slideshow -------- */
+      function startSlideshow() {
+        if (slideshowTimer) return;
+        slideshowBtn.textContent = '⏹️ Detener slideshow';
+        currentIndex = 0;
+        openLightbox(currentIndex);
+        slideshowTimer = setInterval(() => {
+          currentIndex = (currentIndex + 1) % photos.length;
+          setLightboxImage(currentIndex);
+        }, 3000);
+      }
+      function stopSlideshow() {
+        slideshowBtn.textContent = '🎞️ Iniciar slideshow';
+        clearInterval(slideshowTimer);
+        slideshowTimer = null;
+      }
+      slideshowBtn.addEventListener('click', () =>
+        slideshowTimer ? stopSlideshow() : startSlideshow()
+      );
+
+      /* -------- Lightbox -------- */
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxCaption = document.getElementById('lightboxCaption');
+      const closeBtn = document.getElementById('closeBtn');
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      function openLightbox(index) {
+        setLightboxImage(index);
+        lightbox.classList.add('active');
+      }
+      function setLightboxImage(index) {
+        currentIndex = index;
+        const p = photos[index];
+        lightboxImg.src = p.src;
+        lightboxCaption.textContent = p.cap || '—';
+      }
+      function closeLightbox() {
+        lightbox.classList.remove('active');
+        stopSlideshow();
+      }
+      closeBtn.addEventListener('click', closeLightbox);
+      prevBtn.addEventListener('click', () =>
+        setLightboxImage((currentIndex - 1 + photos.length) % photos.length)
+      );
+      nextBtn.addEventListener('click', () => setLightboxImage((currentIndex + 1) % photos.length));
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) closeLightbox();
+      });
+
+      // Teclado: Esc, ←, →
+      document.addEventListener('keydown', (e) => {
+        if (!lightbox.classList.contains('active')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') prevBtn.click();
+        if (e.key === 'ArrowRight') nextBtn.click();
+      });
+
+      /* -------- Notas -------- */
+      const NOTE_KEY = 'dadpage-note';
+      const noteArea = document.getElementById('noteArea');
+      const saveNoteBtn = document.getElementById('saveNote');
+      const clearNoteBtn = document.getElementById('clearNote');
+      noteArea.value = localStorage.getItem(NOTE_KEY) || '';
+      saveNoteBtn.addEventListener('click', () => localStorage.setItem(NOTE_KEY, noteArea.value));
+      clearNoteBtn.addEventListener('click', () => {
+        noteArea.value = '';
+        localStorage.removeItem(NOTE_KEY);
+      });
+    </script>
+  </body>
+</html>
