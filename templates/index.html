@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Para Papá — Álbum de recuerdos</title>
     <meta name="description" content="Página personal para Papá." />
-    <link e/svg+xml,%3Csvg xmlns=>
     <style>
       :root {
         --bg: #f9f7f2;
@@ -202,101 +201,65 @@
       }
 
       /* GALERÍA MASONRY con “marco polaroid” y más fotos */
-      .gallery-toolbar {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        align-items: center;
-        margin: 12px 0;
-      }
-      .gallery-toolbar input[type='text'] {
-        flex: 1;
-        padding: 10px 12px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        font-size: 15px;
-      }
-      .masonry {
-        columns: 4 260px;
-        column-gap: 16px;
-      }
-      @media (max-width: 1200px) {
-        .masonry {
-          columns: 3 240px;
-        }
-      }
-      @media (max-width: 900px) {
-        .masonry {
-          columns: 2 220px;
-        }
-      }
-      @media (max-width: 640px) {
-        .masonry {
-          columns: 1 100%;
-        }
-      }
-
-      .photo-card {
-        break-inside: avoid;
-        margin: 0 0 16px;
-        background: var(--frame);
-        border: 10px solid #fff;
-        border-bottom: 36px solid #fff;
-        border-radius: 14px; /* marco polaroid */
-        box-shadow: 0 12px 22px rgba(0, 0, 0, 0.15);
-        position: relative;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        transform: rotate(calc(var(--tilt, 0deg)));
-      }
-      .photo-card:hover {
-        transform: translateY(-2px) rotate(calc(var(--tilt, 0deg)));
-        box-shadow: 0 16px 28px rgba(0, 0, 0, 0.18);
-      }
-      .photo-card img {
+      /* GALERIA - Polaroid Collage */
+      .gallery {
+        column-count: 4;
+        column-gap: 1rem;
         width: 100%;
-        height: auto;
-        display: block;
-        border-radius: 8px;
-      }
-      .caption {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 6px;
-        text-align: center;
-        color: #374151;
-        font-weight: 700;
-        font-size: 14px;
-      }
-      .card-actions {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        gap: 6px;
-      }
-      .icon-btn {
-        border: none;
-        background: #ffffffcc;
-        backdrop-filter: blur(6px);
-        border-radius: 999px;
-        padding: 8px;
-        cursor: pointer;
-        box-shadow: var(--shadow);
-      }
-      .icon-btn:hover {
-        transform: translateY(-1px);
-      }
-      .heart {
-        color: #ef4444;
-      }
-      .zoom {
-        color: #1f2937;
-      }
-      .drag {
-        color: #7c3aed;
+        padding: 1rem;
+        max-width: 1400px;
+        margin: 0 auto;
       }
 
+      .gallery-item {
+        break-inside: avoid;
+        display: inline-block;
+        background: #fff;
+        padding: 10px;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+        transform: rotate(calc((var(--r) - 0.5) * 10deg));
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .gallery-item:hover {
+        transform: scale(1.05) rotate(0deg);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      }
+
+      .gallery-item img {
+        width: 100%;
+        border-radius: 6px;
+        display: block;
+      }
+
+      .caption {
+        font-size: 14px;
+        margin-top: 8px;
+        text-align: center;
+        min-height: 30px;
+        font-style: italic;
+        color: #444;
+      }
+
+      @media (max-width: 950px) {
+        .gallery {
+          column-count: 3;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .gallery {
+          column-count: 2;
+        }
+      }
+
+      @media (max-width: 420px) {
+        .gallery {
+          column-count: 1;
+        }
+      }
       /* LIGHTBOX */
       .lightbox {
         position: fixed;
@@ -390,7 +353,7 @@
       <!-- HEADER -->
       <header class="hero reveal">
         <div class="hero-inner">
-          <h1 class="title">PARA MI VIEJO 💙</h1>
+          <h1 class="title">PARA MI VIEJO 💚</h1>
           <p class="subtitle" id="introText">Un pequeño detalle con amor.</p>
           <div class="chips">
             <span class="chip">🎂 Cumpleaños: <strong id="dateChip">—</strong></span>
@@ -446,8 +409,7 @@
       <section class="card reveal">
         <h2>Galería de recuerdos 📸</h2>
         <p class="muted">
-          Sube varias fotos, ordénalas, marca tus favoritas con ❤️, haz zoom y disfruta el
-          slideshow.
+          Un pequeño collage de fotos especiales juntos. Haz doble clic en una foto para marcarla como favorita, y si quieres puedes verlas como un slideshow (verlas una una).
         </p>
 
         <div class="gallery-toolbar">
@@ -459,38 +421,24 @@
           <button id="slideshowBtn" class="btn-gold">🎞️ Iniciar slideshow</button>
         </div>
 
-        <div class="masonry" id="gallery"></div>
-        <p class="muted" style="margin-top: 6px">
-          Consejo: también puedes arrastrar archivos de imagen desde tu ordenador directamente sobre
-          la página.
-        </p>
+        <!-- Usamos la clase "gallery" para que coincida con el CSS -->
+        <div class="gallery" id="gallery"></div>
       </section>
 
-      <!-- NOTAS -->
-      <section class="card reveal">
-        <h2>Palabras para Papá ✍️</h2>
-        <p class="muted">Escribe una dedicatoria. Se guarda localmente en este dispositivo.</p>
-        <textarea
-          id="noteArea"
-          placeholder="Escribe tu mensaje..."
-          style="
-            width: 100%;
-            min-height: 120px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            padding: 12px;
-          "
-        ></textarea>
-        <div class="toolbar">
-          <button id="saveNote" class="btn">Guardar</button>
-          <button id="clearNote" class="btn btn-outline">Limpiar</button>
-        </div>
-      </section>
+<!-- MENSAJE ESTÁTICO PARA PAPÁ -->
+<section class="card reveal" id="staticMessage" style="text-align: center; padding: 40px; background: linear-gradient(135deg, #fdf6e3, #ffecd2); border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.2); transition: transform 0.3s, box-shadow 0.3s;">
+  <h2 style="font-size: clamp(28px, 4vw, 42px); margin-bottom: 24px; color: #7c3aed;">Pequeña dedicatoria de cumpleaños 💚</h2>
+  <p style="font-size: clamp(18px, 2.2vw, 24px); color: #1f2937; max-width: 800px; margin: 0 auto; line-height: 1.5;">
+    Papá, a pesar de la distancia, en este día especial quiero mediante un pequeño detalle mostrarte los frutos de lo que has sembrado,pero sobre todo recordarte lo mucho que significas para mí. Eres mi guía, mi apoyo y mi inspiración constante en la vida. Gracias por cada sacrificio, por tu amor incondicional y por mediante el ejemplo, enseñarme el valor de la perseverancia, la honestidad, y que dando todo de mi, puedo conseguir todo lo que me proponga. Espero que este cumpleaños (a pesar de que estemos lejos y no pueda compartir contigo) esté lleno de alegría, amor y momentos especiales e inolvidables. ¡Feliz cumpleaños! Te amo muchisimo mi sensei.
+  </p>
+</section>
 
-      <div class="card reveal" style="text-align: center">
-        Con ❤️ para ti Papá — Siempre presente en mi mente y corazón.
-      </div>
-    </div>
+<style>
+  #staticMessage:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+  }
+</style>
 
     <!-- LIGHTBOX -->
     <div class="lightbox" id="lightbox">
@@ -560,13 +508,14 @@
 
       function nextBirthdayBase(date) {
         const now = new Date();
-        return now.getTime() <= date.getTime()
-          ? date
-          : new Date(
-              `${date.getUTCFullYear() + 1}-${CONFIG.eventDateISO.slice(5, 10)}T${
-                CONFIG.eventDateISO.split('T')[1]
-              }`
-            );
+        // si la fecha del evento aún no llegó, la usamos; si ya pasó, montamos la del año siguiente
+        if (now.getTime() <= date.getTime()) return date;
+        const year = date.getUTCFullYear() + 1;
+        // reutilizamos la parte de mes/día y la hora del ISO original
+        const mmdd = CONFIG.eventDateISO.slice(5, 10); // "-12-28"
+        const timePart = CONFIG.eventDateISO.split('T')[1] || '00:00:00-05:00';
+        // construimos una ISO compatible (sin manejar todos los casos edge de zonas)
+        return new Date(`${year}-${mmdd}T${timePart}`);
       }
       let target = nextBirthdayBase(eventDate);
 
@@ -705,35 +654,41 @@
       const searchInput = document.getElementById('searchInput');
 
       const PHOTOS_KEY = 'dadpage-photos';
-      let photos = loadPhotos() || seedPhotos();
+      let photos = loadPhotos() && loadPhotos().length ? loadPhotos() : seedPhotos();
       let slideshowTimer = null;
       let currentIndex = 0;
 
       function seedPhotos() {
         return [
           {
-            src: 'https://images.unsplash.com/photo-1513152697235-fe74c7e2c4df?q=80&w=1200&auto=format&fit=crop',
-            cap: 'Recuerdo 1',
+            src: 'images/foto1.jpg',
+            cap: 'La salchipapota de Perro Mono',
             fav: false,
             tilt: '-1deg',
           },
           {
-            src: 'https://images.unsplash.com/photo-1520975916090-3105956dac38?q=80&w=1200&auto=format&fit=crop',
-            cap: 'Recuerdo 2',
-            fav: true,
-            tilt: '1.2deg',
-          },
-          {
-            src: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1200&auto=format&fit=crop',
-            cap: 'Recuerdo 3',
-            fav: false,
-            tilt: '-.6deg',
-          },
-          {
-            src: 'https://images.unsplash.com/photo-1511988617509-a57c8a288659?q=80&w=1200&auto=format&fit=crop',
-            cap: 'Recuerdo 4',
+            src: 'images/foto2.jpg',
+            cap: 'Tu parte con picante y la mia no',
             fav: false,
             tilt: '1deg',
+          },
+          {
+            src: 'images/foto3.jpg',
+            cap: 'El resultado de tanto esfuerzo junto a ti',
+            fav: false,
+            tilt: '-0.5deg',
+          },
+          {
+            src: 'images/foto4.jpg',
+            cap: 'Nos conocemos Titan Plaza de memoria',
+            fav: false,
+            tilt: '1deg',
+          },
+          {
+            src: 'images/foto5.jpg',
+            cap: 'Desde chiquito con la cara de payaso',
+            fav: false,
+            tilt: '-1deg',
           },
         ];
       }
@@ -753,67 +708,53 @@
 
       function renderGallery(filter = '') {
         galleryEl.innerHTML = '';
-        const list = photos
-          .map((p, i) => ({ ...p, idx: i }))
-          .filter((p) => p.cap.toLowerCase().includes(filter.toLowerCase()));
 
-        if (list.length === 0) {
+        const filtered = photos.filter((p) => p.cap.toLowerCase().includes(filter.toLowerCase()));
+
+        if (filtered.length === 0) {
           galleryEl.innerHTML =
             "<div class='muted' style='padding:10px'>No hay fotos coincidentes. Prueba otra búsqueda o añade nuevas.</div>";
           return;
         }
 
-        list.forEach((p) => {
+        filtered.forEach((p, idx) => {
           const card = document.createElement('div');
-          card.className = 'photo-card';
-          card.style.setProperty('--tilt', p.tilt || '0deg');
-          card.setAttribute('draggable', 'true');
-          card.dataset.index = p.idx;
+          card.className = 'gallery-item';
+          card.style.setProperty('--r', Math.random());
 
-          card.innerHTML = `
-          <div class="card-actions">
-            <button class="icon-btn heart" title="Favorito">${p.fav ? '❤️' : '🤍'}</button>
-            <button class="icon-btn zoom" title="Ver grande">🔍</button>
-            <button class="icon-btn drag" title="Arrastrar para reordenar">↕️</button>
-          </div>
-          ${p.src}
-          <div class="caption">${escapeHtml(p.cap)}</div>
-        `;
-          // Favorito
-          card.querySelector('.heart').addEventListener('click', () => {
-            photos[p.idx].fav = !photos[p.idx].fav;
+          const img = document.createElement('img');
+          img.src = p.src;
+          img.alt = p.cap;
+          img.addEventListener('click', () => openLightbox(idx));
+
+          const caption = document.createElement('div');
+          caption.className = 'caption';
+          caption.textContent = p.cap;
+
+          caption.addEventListener('click', () => {
+            const input = prompt('Escribe un mensaje:', p.cap);
+            if (input !== null) {
+              p.cap = input;
+              savePhotos();
+              renderGallery(filter);
+            }
+          });
+
+          // marca favorito al hacer doble clic en la imagen (ejemplo simple)
+          img.addEventListener('dblclick', () => {
+            p.fav = !p.fav;
             savePhotos();
-            renderGallery(searchInput.value);
-          });
-          // Zoom (lightbox)
-          card.querySelector('.zoom').addEventListener('click', () => openLightbox(p.idx));
-          card.querySelector('img').addEventListener('click', () => openLightbox(p.idx));
-
-          // Drag & drop reorder
-          card.addEventListener('dragstart', (e) => {
-            e.dataTransfer.setData('text/plain', p.idx);
-          });
-          card.addEventListener('dragover', (e) => e.preventDefault());
-          card.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const from = parseInt(e.dataTransfer.getData('text/plain'), 10);
-            const to = p.idx;
-            if (from === to) return;
-            const item = photos.splice(from, 1)[0];
-            photos.splice(to, 0, item);
-            savePhotos();
-            renderGallery(searchInput.value);
+            renderGallery(filter);
           });
 
+          card.appendChild(img);
+          card.appendChild(caption);
           galleryEl.appendChild(card);
         });
       }
-      function escapeHtml(s) {
-        return s.replace(
-          /[&<>"']/g,
-          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
-        );
-      }
+
+      // si no hay fotos -> renderizar
+      renderGallery();
 
       addPhotosBtn.addEventListener('click', () => fileInput.click());
       fileInput.addEventListener('change', async () => {
@@ -872,15 +813,15 @@
 
       favoritesFirstBtn.addEventListener('click', () => {
         photos.sort((a, b) => (b.fav ? 1 : 0) - (a.fav ? 1 : 0));
+        savePhotos();
         renderGallery(searchInput.value);
       });
 
       searchInput.addEventListener('input', () => renderGallery(searchInput.value));
-      renderGallery();
 
       /* -------- Slideshow -------- */
       function startSlideshow() {
-        if (slideshowTimer) return;
+        if (slideshowTimer || photos.length === 0) return;
         slideshowBtn.textContent = '⏹️ Detener slideshow';
         currentIndex = 0;
         openLightbox(currentIndex);
@@ -894,60 +835,85 @@
         clearInterval(slideshowTimer);
         slideshowTimer = null;
       }
-      slideshowBtn.addEventListener('click', () =>
-        slideshowTimer ? stopSlideshow() : startSlideshow()
-      );
+      slideshowBtn.addEventListener('click', () => {
+        if (slideshowTimer) stopSlideshow();
+        else startSlideshow();
+      });
 
-      /* -------- Lightbox -------- */
+      /* -------- LIGHTBOX -------- */
       const lightbox = document.getElementById('lightbox');
       const lightboxImg = document.getElementById('lightboxImg');
       const lightboxCaption = document.getElementById('lightboxCaption');
-      const closeBtn = document.getElementById('closeBtn');
       const prevBtn = document.getElementById('prevBtn');
       const nextBtn = document.getElementById('nextBtn');
+      const closeBtn = document.getElementById('closeBtn');
 
-      function openLightbox(index) {
-        setLightboxImage(index);
+      function openLightbox(idx) {
+        currentIndex = idx;
+        setLightboxImage(idx);
         lightbox.classList.add('active');
       }
-      function setLightboxImage(index) {
-        currentIndex = index;
-        const p = photos[index];
-        lightboxImg.src = p.src;
-        lightboxCaption.textContent = p.cap || '—';
-      }
+
       function closeLightbox() {
         lightbox.classList.remove('active');
         stopSlideshow();
       }
+
+      function setLightboxImage(idx) {
+        const p = photos[idx];
+        if (!p) return;
+        lightboxImg.src = p.src;
+        lightboxCaption.textContent = p.cap;
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (photos.length === 0) return;
+        currentIndex = (currentIndex - 1 + photos.length) % photos.length;
+        setLightboxImage(currentIndex);
+      });
+
+      nextBtn.addEventListener('click', () => {
+        if (photos.length === 0) return;
+        currentIndex = (currentIndex + 1) % photos.length;
+        setLightboxImage(currentIndex);
+      });
+
       closeBtn.addEventListener('click', closeLightbox);
-      prevBtn.addEventListener('click', () =>
-        setLightboxImage((currentIndex - 1 + photos.length) % photos.length)
-      );
-      nextBtn.addEventListener('click', () => setLightboxImage((currentIndex + 1) % photos.length));
+
       lightbox.addEventListener('click', (e) => {
         if (e.target === lightbox) closeLightbox();
       });
 
-      // Teclado: Esc, ←, →
-      document.addEventListener('keydown', (e) => {
-        if (!lightbox.classList.contains('active')) return;
-        if (e.key === 'Escape') closeLightbox();
-        if (e.key === 'ArrowLeft') prevBtn.click();
-        if (e.key === 'ArrowRight') nextBtn.click();
+      /* -------- NOTAS -------- */
+      const noteArea = document.getElementById('noteArea');
+      const saveNote = document.getElementById('saveNote');
+      const clearNote = document.getElementById('clearNote');
+      const NOTE_KEY = 'dadpage-note';
+
+      function loadNote() {
+        const saved = localStorage.getItem(NOTE_KEY);
+        if (saved) noteArea.value = saved;
+      }
+      loadNote();
+
+      saveNote.addEventListener('click', () => {
+        localStorage.setItem(NOTE_KEY, noteArea.value);
       });
 
-      /* -------- Notas -------- */
-      const NOTE_KEY = 'dadpage-note';
-      const noteArea = document.getElementById('noteArea');
-      const saveNoteBtn = document.getElementById('saveNote');
-      const clearNoteBtn = document.getElementById('clearNote');
-      noteArea.value = localStorage.getItem(NOTE_KEY) || '';
-      saveNoteBtn.addEventListener('click', () => localStorage.setItem(NOTE_KEY, noteArea.value));
-      clearNoteBtn.addEventListener('click', () => {
-        noteArea.value = '';
-        localStorage.removeItem(NOTE_KEY);
+      clearNote.addEventListener('click', () => {
+        if (confirm('¿Seguro que quieres borrar la nota?')) {
+          noteArea.value = '';
+          localStorage.removeItem(NOTE_KEY);
+        }
       });
+
+      /* pequeño helper (si en algún momento necesitas escapar texto) */
+      function escapeHtml(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])
+        );
+      }
     </script>
   </body>
 </html>
